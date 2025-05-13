@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "990132316337",
+    "project_id": "laundry-management-49c9d",
+    "storage_bucket": "laundry-management-49c9d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990132316337:android:57a00e525915c6fbe31a90",
+        "android_client_info": {
+          "package_name": "com.example.laundry_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtzO0fLBI5_A8fPdX7GUuQcVMzIAdwLFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
