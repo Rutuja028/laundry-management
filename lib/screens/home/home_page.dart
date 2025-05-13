@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:laundry_management/screens/add_customer_info.dart';
+import 'package:laundry_management/screens/customer/add_customer_info.dart';
+import 'package:laundry_management/screens/customer/customer_list.dart';
 import 'package:laundry_management/screens/order_summary.dart';
 import 'package:laundry_management/screens/pending.dart';
 
@@ -60,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                   // Profile Image
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: AssetImage('assets/profile.jpg'),
+                    backgroundImage: AssetImage('assets/profile.png'),
                   ),
                   SizedBox(height: 20),
                   Text(
@@ -79,6 +81,12 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+            },
+            child: const Text("Logout"),
           ),
           const SizedBox(height: 50),
 
@@ -99,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AddCustomerDetail(),
+                          builder: (context) => AddCustomerDetail(),
                         ),
                       );
                     },
@@ -110,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AddCustomerDetail(),
+                          builder: (context) => CustomerListScreen(),
                         ),
                       );
                     },

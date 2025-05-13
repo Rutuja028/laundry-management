@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_management/screens/register_page.dart';
-import 'package:laundry_management/screens/home_page.dart';
+import 'package:laundry_management/screens/home/home_page.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
