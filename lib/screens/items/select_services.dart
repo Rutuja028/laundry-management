@@ -58,12 +58,11 @@ class SelectServices extends StatelessWidget {
                   style: const TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ),
-              const SizedBox(height: 10),
-              _buildProceedButton(context, itemController),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: _buildProceedButton(context, itemController),
     );
   }
 
@@ -121,84 +120,11 @@ class SelectServices extends StatelessWidget {
     String price,
     String imagePath,
     ItemController controller,
-  ) => ServiceCard(
-    imagePath: imagePath,
-    title: title,
-    price: price,
-    isSelected: controller.selectedService.value == title,
-    onTap: () => controller.setService(title),
-  );
+  ) {
+    final bool isSelected = controller.selectedService.value == title;
 
-  Widget _buildDetergentOptions(ItemController controller) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      DetergentOption(
-        title: 'Regular',
-        isSelected: controller.selectedDetergent.value == 'Regular',
-        onTap: () => controller.setDetergent('Regular'),
-      ),
-      DetergentOption(
-        title: 'Perfume Free',
-        isSelected: controller.selectedDetergent.value == 'Perfume Free',
-        onTap: () => controller.setDetergent('Perfume Free'),
-      ),
-      DetergentOption(
-        title: 'Eco-friendly',
-        isSelected: controller.selectedDetergent.value == 'Eco-friendly',
-        onTap: () => controller.setDetergent('Eco-friendly'),
-      ),
-    ],
-  );
-
-  Widget _buildProceedButton(
-    BuildContext context,
-    ItemController controller,
-  ) => ElevatedButton(
-    onPressed: () {
-      if (controller.selectedService.value.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a service!')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Proceeding with ${controller.selectedService.value} and ${controller.selectedDetergent.value} detergent.',
-            ),
-          ),
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const AddItemCount()),
-        );
-      }
-    },
-    style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
-    child: const Text('Proceed', style: TextStyle(color: Colors.black)),
-  );
-}
-
-// Service Card Widget (Unchanged)
-class ServiceCard extends StatelessWidget {
-  final String imagePath;
-  final String title;
-  final String price;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const ServiceCard({
-    super.key,
-    required this.imagePath,
-    required this.title,
-    required this.price,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => controller.setService(title),
       child: Container(
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue : Colors.white,
@@ -229,25 +155,21 @@ class ServiceCard extends StatelessWidget {
       ),
     );
   }
-}
 
-// Detergent Option Widget (Unchanged)
-class DetergentOption extends StatelessWidget {
-  final String title;
-  final bool isSelected;
-  final VoidCallback onTap;
+  Widget _buildDetergentOptions(ItemController controller) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      _buildDetergentOption('Regular', controller),
+      _buildDetergentOption('Perfume Free', controller),
+      _buildDetergentOption('Eco-friendly', controller),
+    ],
+  );
 
-  const DetergentOption({
-    super.key,
-    required this.title,
-    required this.isSelected,
-    required this.onTap,
-  });
+  Widget _buildDetergentOption(String title, ItemController controller) {
+    final bool isSelected = controller.selectedDetergent.value == title;
 
-  @override
-  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => controller.setDetergent(title),
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -262,6 +184,36 @@ class DetergentOption extends StatelessWidget {
             color: isSelected ? Colors.white : Colors.black,
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildProceedButton(BuildContext context, ItemController controller) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        onPressed: () {
+          if (controller.selectedService.value.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Please select a service!')),
+            );
+            return;
+          }
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AddItemCount()),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: const Text('Proceed', style: TextStyle(fontSize: 16)),
       ),
     );
   }

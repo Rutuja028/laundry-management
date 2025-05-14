@@ -5,9 +5,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:laundry_management/controllers/customer_controller.dart';
 import 'package:laundry_management/controllers/items_controller.dart';
+import 'package:laundry_management/controllers/order_controller.dart';
 import 'package:laundry_management/screens/auth/otp_page.dart';
 import 'package:laundry_management/screens/auth/sign_in_page.dart';
 import 'package:laundry_management/screens/home/home_page.dart';
+import 'package:laundry_management/screens/invoices_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +17,8 @@ void main() async {
   await Firebase.initializeApp(); // Add firebase_options.dart if needed
   Get.put(CustomerController());
   Get.put(ItemController());
+  Get.put(OrderController());
+
   runApp(const MainApp());
 }
 
@@ -30,6 +34,7 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/otp', page: () => OTPPage()),
         GetPage(name: '/signin', page: () => SignInPage()),
         GetPage(name: '/home', page: () => HomePage()),
+        GetPage(name: '/invoices', page: () => InvoicesScreen()),
       ],
     );
   }

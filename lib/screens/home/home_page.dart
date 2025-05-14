@@ -1,20 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:laundry_management/screens/customer/add_customer_info.dart';
 import 'package:laundry_management/screens/customer/customer_list.dart';
 import 'package:laundry_management/screens/order_summary.dart';
 import 'package:laundry_management/screens/pending.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   // Navigate to another screen
-  void navigateToPage(String page) {
+  void navigateToPage(BuildContext context, String page) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -36,6 +32,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF6ABCF8),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+            },
+          ),
+        ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -81,12 +88,6 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-            },
-            child: const Text("Logout"),
           ),
           const SizedBox(height: 50),
 
@@ -137,12 +138,7 @@ class _HomePageState extends State<HomePage> {
                   CustomButton(
                     title: "Invoice",
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const OrderSummary(),
-                        ),
-                      );
+                      Get.toNamed('/invoices');
                     },
                   ),
                 ],
@@ -156,36 +152,6 @@ class _HomePageState extends State<HomePage> {
 }
 
 // Reusable Custom Button Widget
-// class CustomButton extends StatelessWidget {
-//   final String title;
-//   final VoidCallback onPressed;
-
-//   const CustomButton({super.key, required this.title, required this.onPressed});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       // onPressed: onPressed,
-//       child: Container(
-//         decoration: BoxDecoration(
-//           color: const Color(0xFF88CFF1),
-//           borderRadius: BorderRadius.circular(12),
-//         ),
-//         child: Center(
-//           child: Text(
-//             title,
-//             style: const TextStyle(
-//               fontSize: 16,
-//               fontWeight: FontWeight.bold,
-//               color: Colors.white,
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class CustomButton extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;

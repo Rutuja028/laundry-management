@@ -1,62 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:laundry_management/controllers/items_controller.dart';
 import 'package:laundry_management/screens/schedule_date_time.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:laundry_management/screens/customer_detail_model.dart';
 
-class AddItemCount extends StatefulWidget {
+class AddItemCount extends StatelessWidget {
   const AddItemCount({super.key});
 
   @override
-  State<AddItemCount> createState() => _AddItemCountState();
-}
-
-class _AddItemCountState extends State<AddItemCount> {
-  TextEditingController demoController = TextEditingController();
-
-  List<int> quantities = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-  final List<Map<String, dynamic>> items = [
-    {
-      'image': 'assets/add_item/blazer.jpg',
-      'name': 'Blazer',
-      'price': 'r20/pc',
-    },
-    {
-      'image': 'assets/add_item/tShirt.jpg',
-      'name': 'T-shirt',
-      'price': 'r40/pc',
-    },
-    {'image': 'assets/add_item/kurti.png', 'name': 'Kurta', 'price': 'r20/pc'},
-    {
-      'image': 'assets/add_item/blouse.png',
-      'name': 'Blouse',
-      'price': 'r30/pc',
-    },
-    {
-      'image': 'assets/add_item/white_shirt.png',
-      'name': 'Shirt',
-      'price': 'r50/pc',
-    },
-    {
-      'image': 'assets/add_item/trousers.jpg',
-      'name': 'Trousers',
-      'price': 'r50/pc',
-    },
-    {
-      'image': 'assets/add_item/dupatta.png',
-      'name': 'Dupatta',
-      'price': 'r50/pc',
-    },
-    {
-      'image': 'assets/add_item/sweater.jpg',
-      'name': 'Sweater',
-      'price': 'r50/pc',
-    },
-    {'image': 'assets/add_item/saree.jpg', 'name': 'Saree', 'price': 'r100/pc'},
-  ];
-
-  @override
   Widget build(BuildContext context) {
+    final ItemController controller = Get.find();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -106,73 +60,86 @@ class _AddItemCountState extends State<AddItemCount> {
             ),
 
             // Filter Buttons
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   FilterButton(title: 'All', isSelected: true),
-                  FilterButton(title: 'TOPS'),
-                  FilterButton(title: 'BOTTOMS'),
-                  FilterButton(title: 'DRESS'),
+                  FilterButton(title: 'TOPS', isSelected: false),
+                  FilterButton(title: 'BOTTOMS', isSelected: false),
+                  FilterButton(title: 'DRESS', isSelected: false),
                 ],
               ),
             ),
+
             const SizedBox(height: 10),
 
-            // List of Items
+            // Item List
             Expanded(
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return ItemCard(
-                    image: items[index]['image'],
-                    name: items[index]['name'],
-                    price: items[index]['price'],
-                    quantity: quantities[index],
-                    onIncrement: () {
-                      setState(() {
-                        quantities[index]++;
-                      });
-                    },
-                    onDecrement: () {
-                      setState(() {
-                        if (quantities[index] > 0) quantities[index]--;
-                      });
-                    },
-                  );
-                },
-              ),
+              child: Obx(() {
+                return ListView.builder(
+                  itemCount: controller.items.length,
+                  itemBuilder: (context, index) {
+                    final item = controller.items[index];
+                    return ItemCard(
+                      image: item['image'],
+                      name: item['name'],
+                      price: item['price'],
+                      quantity: controller.quantities[index], // pass RxInt
+                      onIncrement: () => controller.incrementQuantity(index),
+                      onDecrement: () => controller.decrementQuantity(index),
+                    );
+                  },
+                );
+              }),
             ),
 
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ScheduleDateTime(),
-                    ),
-                  );
-                  // FirebaseFirestore.instance.collection("addItemList").add({
-                  //   "quantities": quantities,
-                  // });
+            // Confirm Button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final selectedItems = <Map<String, dynamic>>[];
 
-                  /////Demo
-                  List<String> quantities =
-                      demoController.text.trim() as List<String>;
-                  FirebaseFirestore.instance
-                      .collection("addItemList")
-                      .add(quantities as Map<String, dynamic>);
-                },
-                style: const ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(Colors.white),
-                ),
-                child: const Text(
-                  "Confirm",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+                    for (int i = 0; i < controller.items.length; i++) {
+                      if (controller.quantities[i] > 0) {
+                        selectedItems.add({
+                          'name': controller.items[i]['name'],
+                          'price': controller.items[i]['price'],
+                          'quantity': controller.quantities[i],
+                        });
+                      }
+                    }
+
+                    // await FirebaseFirestore.instance
+                    //     .collection("addItemList")
+                    //     .add({'items': selectedItems});
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                ScheduleDateTime(selectedItems: selectedItems),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    "Confirm",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -182,17 +149,9 @@ class _AddItemCountState extends State<AddItemCount> {
       ),
     );
   }
-}
 
-// Filter Button Widget
-class FilterButton extends StatelessWidget {
-  final String title;
-  final bool isSelected;
-
-  const FilterButton({super.key, required this.title, this.isSelected = false});
-
-  @override
-  Widget build(BuildContext context) {
+  // Filter Button Widget
+  static Widget FilterButton({required String title, bool isSelected = false}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -208,29 +167,16 @@ class FilterButton extends StatelessWidget {
       ),
     );
   }
-}
 
-// Item Card Widget
-class ItemCard extends StatelessWidget {
-  final String image;
-  final String name;
-  final String price;
-  final int quantity;
-  final VoidCallback onIncrement;
-  final VoidCallback onDecrement;
-
-  const ItemCard({
-    super.key,
-    required this.image,
-    required this.name,
-    required this.price,
-    required this.quantity,
-    required this.onIncrement,
-    required this.onDecrement,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  // Item Card Widget
+  static Widget ItemCard({
+    required String image,
+    required String name,
+    required String price,
+    required RxInt quantity,
+    required VoidCallback onIncrement,
+    required VoidCallback onDecrement,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Column(
@@ -263,25 +209,27 @@ class ItemCard extends StatelessWidget {
                 ),
               ),
               subtitle: Text(price, style: const TextStyle(color: Colors.grey)),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.remove, color: Colors.black54),
-                    onPressed: onDecrement,
-                  ),
-                  Text(
-                    '$quantity',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              trailing: Obx(
+                () => Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove, color: Colors.black54),
+                      onPressed: onDecrement,
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add, color: Colors.black54),
-                    onPressed: onIncrement,
-                  ),
-                ],
+                    Text(
+                      '${quantity.value}', // use reactive value
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add, color: Colors.black54),
+                      onPressed: onIncrement,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
