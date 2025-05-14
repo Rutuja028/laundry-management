@@ -39,6 +39,7 @@ class HomePage extends StatelessWidget {
             icon: const Icon(Icons.logout),
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
+              Get.offAllNamed('/signin'); // Redirect to sign-in page
             },
           ),
         ],
