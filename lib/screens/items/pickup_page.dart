@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:laundry_management/screens/order_summary.dart';
+import 'package:laundry_management/screens/items/order_summary.dart';
 import 'package:laundry_management/style_scheme.dart';
 
 class PickUpTimePage extends StatefulWidget {

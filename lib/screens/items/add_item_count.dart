@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laundry_management/controllers/items_controller.dart';
-import 'package:laundry_management/screens/schedule_date_time.dart';
+import 'package:laundry_management/screens/items/schedule_date_time.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddItemCount extends StatelessWidget {

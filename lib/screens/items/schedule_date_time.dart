@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laundry_management/controllers/items_controller.dart';
-import 'package:laundry_management/screens/add_item_count.dart';
-import 'package:laundry_management/screens/order_summary.dart';
+import 'package:laundry_management/screens/items/add_item_count.dart';
+import 'package:laundry_management/screens/items/order_summary.dart';
 
 class ScheduleDateTime extends StatelessWidget {
   final List<Map<String, dynamic>> selectedItems;

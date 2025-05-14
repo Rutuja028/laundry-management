@@ -9,7 +9,7 @@ import 'package:laundry_management/controllers/order_controller.dart';
 import 'package:laundry_management/screens/auth/otp_page.dart';
 import 'package:laundry_management/screens/auth/sign_in_page.dart';
 import 'package:laundry_management/screens/home/home_page.dart';
-import 'package:laundry_management/screens/invoices_screen.dart';
+import 'package:laundry_management/screens/invoices/invoices_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

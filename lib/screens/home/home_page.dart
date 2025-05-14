@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laundry_management/screens/customer/add_customer_info.dart';
 import 'package:laundry_management/screens/customer/customer_list.dart';
-import 'package:laundry_management/screens/order_summary.dart';
-import 'package:laundry_management/screens/pending.dart';
+import 'package:laundry_management/screens/items/order_summary.dart';
+import 'package:laundry_management/screens/pending/pending.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
