@@ -124,6 +124,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                         'time': itemController.deliveryTime.value,
                       },
                       'timestamp': DateTime.now().toIso8601String(),
+                      'status': 'pending',
                     };
 
                     orderController.addOrder(order);

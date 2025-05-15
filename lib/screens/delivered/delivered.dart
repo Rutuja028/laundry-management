@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:laundry_management/controllers/delivered_controller.dart';
 import 'package:laundry_management/controllers/order_controller.dart';
 
-class InvoicesScreen extends StatelessWidget {
-  InvoicesScreen({super.key});
+class DeliveredOrdersScreen extends StatelessWidget {
+  DeliveredOrdersScreen({super.key});
 
-  final OrderController orderController = Get.find<OrderController>();
+  final DeliveryController deliveryController = Get.find<DeliveryController>();
 
   @override
   Widget build(BuildContext context) {
+    // Fetch delivered orders when the screen builds
+    deliveryController.fetchdeliveredOrders();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Invoices'),
+        title: const Text('Delivered Orders'),
         backgroundColor: Colors.lightBlue,
       ),
       backgroundColor: Colors.lightBlue.shade100,
       body: Obx(() {
-        final orders = orderController.orders;
+        final orders = deliveryController.orders;
 
         if (orders.isEmpty) {
-          return const Center(child: Text("No invoices available."));
+          return const Center(child: Text("No delivered orders available."));
         }
 
         return ListView.builder(
@@ -32,6 +36,8 @@ class InvoicesScreen extends StatelessWidget {
             final pickup = order['pickup'];
             final delivery = order['delivery'];
             final timestamp = order['timestamp'];
+            final orderId = order['orderId'];
+            final customerPhone = customer['phone'];
 
             return Card(
               elevation: 4,
@@ -45,7 +51,7 @@ class InvoicesScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Invoice #${index + 1}",
+                      "Order #${index + 1}",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -77,6 +83,15 @@ class InvoicesScreen extends StatelessWidget {
                     ),
                     const Divider(height: 20),
                     Text("Total: ₹${order['subtotal']}"),
+                    const SizedBox(height: 12),
+                    // Status text (always delivered here)
+                    Text(
+                      "Status: Delivered",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:laundry_management/screens/customer/add_customer_info.dart';
 import 'package:laundry_management/screens/customer/customer_list.dart';
 import 'package:laundry_management/screens/items/order_summary.dart';
-import 'package:laundry_management/screens/pending/pending.dart';
+import 'package:laundry_management/screens/delivered/delivered.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -126,20 +126,20 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   CustomButton(
-                    title: "Pending",
+                    title: "Orders",
+                    onPressed: () {
+                      Get.toNamed('/invoices');
+                    },
+                  ),
+                  CustomButton(
+                    title: "Delivered",
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const Pending(),
+                          builder: (context) => DeliveredOrdersScreen(),
                         ),
                       );
-                    },
-                  ),
-                  CustomButton(
-                    title: "Invoice",
-                    onPressed: () {
-                      Get.toNamed('/invoices');
                     },
                   ),
                 ],

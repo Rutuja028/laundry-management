@@ -1,36 +1,42 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CustomerController extends GetxController {
-  // List to hold customer details
-  RxList<Map<String, String>> customerList = <Map<String, String>>[].obs;
+  // Use dynamic instead of String for compatibility with Firestore
+  RxList<Map<String, dynamic>> customerList = <Map<String, dynamic>>[].obs;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  // Instance of GetStorage
   final storage = GetStorage();
 
   @override
   void onInit() {
     super.onInit();
-    _loadCustomers();
+    fetchCustomersFromFirestore();
   }
 
-  // Load customers from local storage
-  void _loadCustomers() {
-    final storedCustomers = storage.read<List>('customers');
-    if (storedCustomers != null) {
-      // Cast each item to Map<String, String>
-      customerList.addAll(
-        List<Map<String, String>>.from(
-          storedCustomers.map((item) => Map<String, String>.from(item)),
-        ),
-      );
+  void fetchCustomersFromFirestore() async {
+    try {
+      final snapshot = await firestore.collection('customers').get();
+      customerList.clear();
+      for (var doc in snapshot.docs) {
+        customerList.add(doc.data()); // doc.data() is Map<String, dynamic>
+      }
+      print('✅ Customers fetched successfully');
+      print(snapshot);
+    } catch (e) {
+      print('❌ Failed to fetch customers: $e');
     }
   }
 
-  // Add a new customer to the list and store it in local storage
-  void addCustomer(String name, String phone, String address) {
+  Future<void> addCustomer(String name, String phone, String address) async {
     final newCustomer = {'name': name, 'phone': phone, 'address': address};
-    customerList.add(newCustomer);
-    storage.write('customers', customerList);
+
+    try {
+      await firestore.collection('customers').doc(phone).set(newCustomer);
+      customerList.add(newCustomer);
+    } catch (e) {
+      print('❌ Failed to add customer: $e');
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laundry_management/controllers/customer_controller.dart';
+import 'package:flutter/services.dart';
 import '../items/select_services.dart';
 
 class AddCustomerDetail extends StatelessWidget {
@@ -24,6 +25,15 @@ class AddCustomerDetail extends StatelessWidget {
         nameController.text.trim(),
         phoneController.text.trim(),
         addressController.text.trim(),
+      );
+      Get.snackbar(
+        "Success",
+        "Customer added successfully",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green.shade600,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(12),
+        duration: const Duration(seconds: 3),
       );
       Get.to(const SelectServices());
     } else {
@@ -63,9 +73,9 @@ class AddCustomerDetail extends StatelessWidget {
                   ),
                 ),
               ),
-              SafeArea(
-                child: Positioned(
-                  left: 5,
+              Positioned(
+                left: 5,
+                child: SafeArea(
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
                     onPressed: () {
@@ -117,6 +127,13 @@ class AddCustomerDetail extends StatelessWidget {
                         controller: phoneController,
                         focusNode: phoneFocusNode,
                         keyboardType: TextInputType.phone,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(
+                            10,
+                          ), // Restrict input to 10 digits
+                          FilteringTextInputFormatter
+                              .digitsOnly, // Allow only digits
+                        ],
                         decoration: const InputDecoration(
                           hintText: "Enter your phone no",
                           prefixIcon: Icon(Icons.phone),
@@ -131,6 +148,21 @@ class AddCustomerDetail extends StatelessWidget {
                             ),
                           ),
                         ),
+                        onChanged: (value) {
+                          if (value.length == 10) {
+                            FocusScope.of(
+                              context,
+                            ).requestFocus(addressFocusNode);
+                          }
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your phone number';
+                          } else if (value.length != 10) {
+                            return 'Phone number must be exactly 10 digits';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 20),
                       const Text("Address"),
