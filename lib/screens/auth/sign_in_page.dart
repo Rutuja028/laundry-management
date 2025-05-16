@@ -5,8 +5,17 @@ import 'package:laundry_management/controllers/auth_controller.dart';
 class SignInPage extends StatelessWidget {
   final TextEditingController numberController = TextEditingController();
   final AuthController authController = Get.put(AuthController());
+  final FocusNode numberFocusNode = FocusNode();
 
-  SignInPage({super.key});
+  SignInPage({super.key}) {
+    numberController.addListener(() {
+      final phone = numberController.text.trim();
+      if (numberController.text.length == 10) {
+        numberFocusNode.unfocus();
+        authController.sendOTP(phone);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +74,7 @@ class SignInPage extends StatelessWidget {
                       const SizedBox(height: 6),
                       TextField(
                         controller: numberController,
+                        focusNode: numberFocusNode,
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                           hintText: "Enter your mobile number",

@@ -11,6 +11,11 @@ class AuthController extends GetxController {
 
   void sendOTP(String number) async {
     isLoading.value = true;
+
+    Future.delayed(Duration(seconds: 30), () {
+      isLoading.value = false;
+    });
+
     await _auth.verifyPhoneNumber(
       phoneNumber: "+91$number",
       verificationCompleted: (PhoneAuthCredential credential) async {

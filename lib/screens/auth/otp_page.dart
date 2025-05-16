@@ -6,7 +6,18 @@ class OTPPage extends StatelessWidget {
   final TextEditingController otpController = TextEditingController();
   final AuthController authController = Get.find();
 
-  OTPPage({super.key});
+  OTPPage({super.key}) {
+    otpController.addListener(() {
+      final otp = otpController.text.trim();
+      if (otp.length == 6) {
+        // Unfocus keyboard
+        FocusManager.instance.primaryFocus?.unfocus();
+
+        // Call verify OTP
+        authController.verifyOTP(otp);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
