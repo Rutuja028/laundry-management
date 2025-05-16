@@ -53,6 +53,15 @@ class OrderController extends GetxController {
           orderData['customer'] = customerDoc.data();
           orders.add(orderData);
         }
+
+        orders.sort((a, b) {
+          final aStatus = a['status'] ?? 'pending';
+          final bStatus = b['status'] ?? 'pending';
+
+          if (aStatus == 'delivered' && bStatus != 'delivered') return 1;
+          if (aStatus != 'delivered' && bStatus == 'delivered') return -1;
+          return 0;
+        });
       }
 
       print('✅ All orders fetched successfully');
@@ -84,6 +93,16 @@ class OrderController extends GetxController {
         orders[index]['status'] = status;
         orders.refresh();
       }
+
+      orders.sort((a, b) {
+        final aStatus = a['status'] ?? 'pending';
+        final bStatus = b['status'] ?? 'pending';
+
+        if (aStatus == 'delivered' && bStatus != 'delivered') return 1;
+        if (aStatus != 'delivered' && bStatus == 'delivered') return -1;
+        return 0;
+      });
+      orders.refresh();
 
       print('✅ Order status updated to $status');
     } catch (e) {

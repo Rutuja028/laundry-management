@@ -149,36 +149,54 @@ class OrderScreen extends StatelessWidget {
 
                       const SizedBox(height: 10),
 
-                      // Show button only if not delivered
                       if (status != 'delivered')
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.teal,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: SizedBox(
+                            width: double.infinity, // full width
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.teal,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    8,
+                                  ), // rectangular look
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ), // height
+                              ),
+                              onPressed: () async {
+                                Get.dialog(
+                                  const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  barrierDismissible: false,
+                                );
+
+                                await orderController.updateOrderStatus(
+                                  customerPhone: customerPhone,
+                                  orderId: orderId,
+                                  status: 'delivered',
+                                );
+
+                                Get.back(); // close loading dialog
+
+                                Get.snackbar(
+                                  "Success",
+                                  "Order marked as delivered",
+                                  snackPosition: SnackPosition.BOTTOM,
+                                );
+                              },
+                              child: const Text(
+                                'Mark as Delivered',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
-                          onPressed: () async {
-                            Get.dialog(
-                              const Center(child: CircularProgressIndicator()),
-                              barrierDismissible: false,
-                            );
-
-                            await orderController.updateOrderStatus(
-                              customerPhone: customerPhone,
-                              orderId: orderId,
-                              status: 'delivered',
-                            );
-
-                            Get.back(); // close loading dialog
-
-                            Get.snackbar(
-                              "Success",
-                              "Order marked as delivered",
-                              snackPosition: SnackPosition.BOTTOM,
-                            );
-                          },
-                          child: const Text('Mark as Delivered'),
                         ),
                     ],
                   ),
