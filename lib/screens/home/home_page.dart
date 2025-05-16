@@ -9,37 +9,19 @@ import 'package:laundry_management/screens/delivered/delivered.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  // Navigate to another screen
-  void navigateToPage(BuildContext context, String page) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder:
-            (context) => Scaffold(
-              appBar: AppBar(title: Text(page)),
-              body: Center(
-                child: Text(
-                  "Welcome to $page Page",
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-            ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFE0F2F1),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF6ABCF8),
+        backgroundColor: const Color(0xFF80CBC4),
+        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
-              Get.offAllNamed('/signin'); // Redirect to sign-in page
+              Get.offAllNamed('/signin');
             },
           ),
         ],
@@ -53,9 +35,9 @@ class HomePage extends StatelessWidget {
             height: 450,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFF6ABCF8), Colors.black87],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFE0F2F1), Color(0xFF80CBC4)],
               ),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(50),
@@ -67,7 +49,6 @@ class HomePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Profile Image
                   CircleAvatar(
                     radius: 40,
                     backgroundImage: AssetImage('assets/profile.png'),
@@ -78,13 +59,13 @@ class HomePage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.teal,
                     ),
                   ),
                   SizedBox(height: 10),
                   Text(
                     "Get your laundry washed, folded,\nand delivered safely",
-                    style: TextStyle(fontSize: 16, color: Colors.white70),
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ],
               ),
@@ -152,7 +133,6 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// Reusable Custom Button Widget
 class CustomButton extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;
@@ -163,7 +143,11 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF88CFF1),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF80CBC4), Color(0xFF4DB6AC)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: ElevatedButton(

@@ -13,52 +13,57 @@ class SelectServices extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
+              colors: [Color(0xFFE0F2F1), Color(0xFF80CBC4)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFF6ABCF8), Colors.black87],
             ),
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.teal),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Add Item', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'Add Item',
+          style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [Color(0xFF6ABCF8), Colors.black87],
+            colors: [Color(0xFFE0F2F1), Color(0xFF80CBC4)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSearchBar(),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Select Services'),
-              const SizedBox(height: 10),
-              Obx(() => _buildServiceGrid(itemController)),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Select Detergent'),
-              const SizedBox(height: 10),
-              Obx(() => _buildDetergentOptions(itemController)),
-              const SizedBox(height: 20),
-              Obx(
-                () => Text(
-                  'Do you want to proceed with ${itemController.selectedService.value} and ${itemController.selectedDetergent.value} detergent?',
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                _buildSectionTitle('Select Services'),
+                const SizedBox(height: 10),
+                Obx(() => _buildServiceGrid(itemController)),
+                const SizedBox(height: 20),
+                _buildSectionTitle('Select Detergent'),
+                const SizedBox(height: 10),
+                Obx(() => _buildDetergentOptions(itemController)),
+                const SizedBox(height: 20),
+                Obx(
+                  () => Text(
+                    'Do you want to proceed with ${itemController.selectedService.value} and ${itemController.selectedDetergent.value} detergent?',
+                    style: const TextStyle(fontSize: 16, color: Colors.black87),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -70,12 +75,12 @@ class SelectServices extends StatelessWidget {
     padding: const EdgeInsets.symmetric(horizontal: 10),
     decoration: BoxDecoration(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(12),
     ),
     child: const TextField(
       decoration: InputDecoration(
         hintText: 'Search...',
-        prefixIcon: Icon(Icons.search, color: Colors.grey),
+        prefixIcon: Icon(Icons.search, color: Colors.teal),
         border: InputBorder.none,
       ),
     ),
@@ -86,7 +91,7 @@ class SelectServices extends StatelessWidget {
     style: const TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 18,
-      color: Colors.black,
+      color: Colors.teal,
     ),
   );
 
@@ -127,11 +132,15 @@ class SelectServices extends StatelessWidget {
       onTap: () => controller.setService(title),
       child: Container(
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue : Colors.white,
+          color: isSelected ? Colors.teal : Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: const [
             BoxShadow(color: Colors.black12, blurRadius: 4, spreadRadius: 1),
           ],
+          border: Border.all(
+            color: isSelected ? Colors.teal : Colors.black12,
+            width: isSelected ? 2 : 1,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -142,13 +151,15 @@ class SelectServices extends StatelessWidget {
               title,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : Colors.black,
+                color: isSelected ? Colors.white : Colors.teal.shade900,
               ),
             ),
             const SizedBox(height: 5),
             Text(
               price,
-              style: TextStyle(color: isSelected ? Colors.white : Colors.black),
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.teal.shade700,
+              ),
             ),
           ],
         ),
@@ -171,17 +182,29 @@ class SelectServices extends StatelessWidget {
     return GestureDetector(
       onTap: () => controller.setDetergent(title),
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue : Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.black12),
+          color: isSelected ? Colors.teal : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.teal.shade200),
+          boxShadow:
+              isSelected
+                  ? [
+                    BoxShadow(
+                      color: Colors.teal.withOpacity(0.4),
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
+                  : [],
         ),
         child: Text(
           title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: isSelected ? Colors.white : Colors.black,
+            color: isSelected ? Colors.white : Colors.teal.shade900,
+            fontSize: 14,
           ),
         ),
       ),
@@ -189,31 +212,40 @@ class SelectServices extends StatelessWidget {
   }
 
   Widget _buildProceedButton(BuildContext context, ItemController controller) {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: () {
-          if (controller.selectedService.value.isEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Please select a service!')),
-            );
-            return;
-          }
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: () {
+              if (controller.selectedService.value.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please select a service!')),
+                );
+                return;
+              }
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const AddItemCount()),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AddItemCount()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              elevation: 4,
+            ),
+            child: const Text(
+              'Proceed',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
           ),
         ),
-        child: const Text('Proceed', style: TextStyle(fontSize: 16)),
       ),
     );
   }

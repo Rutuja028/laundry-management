@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laundry_management/controllers/items_controller.dart';
 import 'package:laundry_management/screens/items/schedule_date_time.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddItemCount extends StatelessWidget {
   const AddItemCount({super.key});
@@ -19,7 +18,10 @@ class AddItemCount extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFF6ABCF8), Colors.black87],
+              colors: [
+                Color(0xFF80CBC4), // light teal
+                Color(0xFF00695C), // dark teal
+              ],
             ),
           ),
         ),
@@ -35,47 +37,14 @@ class AddItemCount extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Color(0xFF6ABCF8), Colors.black87],
+            colors: [Color(0xFFE0F2F1), Color(0xFF80CBC4)],
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Search Bar
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-            ),
-
-            // Filter Buttons
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  FilterButton(title: 'All', isSelected: true),
-                  FilterButton(title: 'TOPS', isSelected: false),
-                  FilterButton(title: 'BOTTOMS', isSelected: false),
-                  FilterButton(title: 'DRESS', isSelected: false),
-                ],
-              ),
-            ),
-
             const SizedBox(height: 10),
 
-            // Item List
             Expanded(
               child: Obx(() {
                 return ListView.builder(
@@ -86,7 +55,7 @@ class AddItemCount extends StatelessWidget {
                       image: item['image'],
                       name: item['name'],
                       price: item['price'],
-                      quantity: controller.quantities[index], // pass RxInt
+                      quantity: controller.quantities[index], // RxInt
                       onIncrement: () => controller.incrementQuantity(index),
                       onDecrement: () => controller.decrementQuantity(index),
                     );
@@ -115,10 +84,6 @@ class AddItemCount extends StatelessWidget {
                       }
                     }
 
-                    // await FirebaseFirestore.instance
-                    //     .collection("addItemList")
-                    //     .add({'items': selectedItems});
-
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -129,7 +94,7 @@ class AddItemCount extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: const Color(0xFF00695C), // dark teal
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -137,7 +102,7 @@ class AddItemCount extends StatelessWidget {
                   child: const Text(
                     "Confirm",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -155,7 +120,7 @@ class AddItemCount extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: isSelected ? Colors.blue : Colors.black54,
+        color: isSelected ? const Color(0xFF00695C) : Colors.teal.shade200,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
@@ -214,18 +179,18 @@ class AddItemCount extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.remove, color: Colors.black54),
+                      icon: const Icon(Icons.remove, color: Colors.teal),
                       onPressed: onDecrement,
                     ),
                     Text(
-                      '${quantity.value}', // use reactive value
+                      '${quantity.value}',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.add, color: Colors.black54),
+                      icon: const Icon(Icons.add, color: Colors.teal),
                       onPressed: onIncrement,
                     ),
                   ],

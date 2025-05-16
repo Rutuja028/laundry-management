@@ -46,6 +46,7 @@ class AddCustomerDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFE0F2F1),
       body: Column(
         children: [
           const SizedBox(height: 20),
@@ -56,7 +57,7 @@ class AddCustomerDetail extends StatelessWidget {
                 height: 200,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color.fromARGB(255, 22, 192, 223), Colors.black87],
+                    colors: [Color(0xFFE0F2F1), Color(0xFF80CBC4)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -68,7 +69,7 @@ class AddCustomerDetail extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: Colors.teal,
                     ),
                   ),
                 ),
@@ -77,7 +78,7 @@ class AddCustomerDetail extends StatelessWidget {
                 left: 5,
                 child: SafeArea(
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                    icon: const Icon(Icons.arrow_back_ios, color: Colors.teal),
                     onPressed: () {
                       Get.back();
                     },
@@ -115,9 +116,7 @@ class AddCustomerDetail extends StatelessWidget {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(
-                              color: Color.fromARGB(255, 9, 162, 189),
-                            ),
+                            borderSide: BorderSide(color: Colors.teal),
                           ),
                         ),
                       ),
@@ -128,11 +127,8 @@ class AddCustomerDetail extends StatelessWidget {
                         focusNode: phoneFocusNode,
                         keyboardType: TextInputType.phone,
                         inputFormatters: [
-                          LengthLimitingTextInputFormatter(
-                            10,
-                          ), // Restrict input to 10 digits
-                          FilteringTextInputFormatter
-                              .digitsOnly, // Allow only digits
+                          LengthLimitingTextInputFormatter(10),
+                          FilteringTextInputFormatter.digitsOnly,
                         ],
                         decoration: const InputDecoration(
                           hintText: "Enter your phone no",
@@ -143,9 +139,7 @@ class AddCustomerDetail extends StatelessWidget {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(
-                              color: Color.fromARGB(255, 9, 162, 189),
-                            ),
+                            borderSide: BorderSide(color: Colors.teal),
                           ),
                         ),
                         onChanged: (value) {
@@ -178,9 +172,7 @@ class AddCustomerDetail extends StatelessWidget {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(
-                              color: Color.fromARGB(255, 9, 162, 189),
-                            ),
+                            borderSide: BorderSide(color: Colors.teal),
                           ),
                         ),
                       ),
@@ -188,12 +180,7 @@ class AddCustomerDetail extends StatelessWidget {
                       Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(
-                              255,
-                              22,
-                              192,
-                              223,
-                            ),
+                            backgroundColor: const Color(0xFF80CBC4),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 50,
                               vertical: 14,

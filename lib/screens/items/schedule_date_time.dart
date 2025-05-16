@@ -70,9 +70,11 @@ class ScheduleDateTime extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
           margin: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: selectedTime.value == time ? Colors.black : Colors.white,
+            color: selectedTime.value == time ? Colors.teal : Colors.white,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.black54),
+            border: Border.all(
+              color: selectedTime.value == time ? Colors.teal : Colors.grey,
+            ),
           ),
           child: Text(
             time,
@@ -89,10 +91,10 @@ class ScheduleDateTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFA0D8F0),
+      backgroundColor: const Color(0xFFE0F2F1), // light teal background
       appBar: AppBar(
         title: const Text('Add Items'),
-        backgroundColor: const Color(0xFFA0D8F0),
+        backgroundColor: const Color(0xFF80CBC4), // darker teal for appbar
         elevation: 0,
       ),
       body: Padding(
@@ -103,10 +105,14 @@ class ScheduleDateTime extends StatelessWidget {
             children: [
               const Text(
                 "Schedule Pickup",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal,
+                ),
               ),
               const SizedBox(height: 10),
-              const Text("Date"),
+              const Text("Date", style: TextStyle(color: Colors.black87)),
               Obx(
                 () => GestureDetector(
                   onTap: () => _selectDate(context, true),
@@ -117,21 +123,21 @@ class ScheduleDateTime extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey),
+                      border: Border.all(color: Colors.teal.shade200),
                     ),
                     child: Center(
                       child: Text(
                         controller.pickupDate.value,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.purple,
+                          color: Colors.teal.shade700,
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-              const Text("Time"),
+              const Text("Time", style: TextStyle(color: Colors.black87)),
               Wrap(
                 children:
                     timeSlots
@@ -148,10 +154,14 @@ class ScheduleDateTime extends StatelessWidget {
               const SizedBox(height: 20),
               const Text(
                 "Schedule Delivery",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal,
+                ),
               ),
               const SizedBox(height: 10),
-              const Text("Date"),
+              const Text("Date", style: TextStyle(color: Colors.black87)),
               Obx(
                 () => GestureDetector(
                   onTap: () => _selectDate(context, false),
@@ -162,21 +172,21 @@ class ScheduleDateTime extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey),
+                      border: Border.all(color: Colors.teal.shade200),
                     ),
                     child: Center(
                       child: Text(
                         controller.deliveryDate.value,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.purple,
+                          color: Colors.teal.shade700,
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-              const Text("Time"),
+              const Text("Time", style: TextStyle(color: Colors.black87)),
               Wrap(
                 children:
                     timeSlots
@@ -198,20 +208,30 @@ class ScheduleDateTime extends StatelessWidget {
           SizedBox(
             width: MediaQuery.of(context).size.width / 2,
             height: 50,
-            child: OutlinedButton(
+            child: ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.black),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+              style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                side: const BorderSide(color: Colors.teal),
               ),
-              child: const Text('Back', style: TextStyle(color: Colors.black)),
+              child: const Text(
+                'Back',
+                style: TextStyle(
+                  color: Colors.teal,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
             ),
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width / 2,
             height: 50,
-            child: OutlinedButton(
+            child: ElevatedButton(
               onPressed: () {
                 if (selectedItems.isEmpty ||
                     controller.pickupDate.value.isEmpty ||
@@ -226,15 +246,20 @@ class ScheduleDateTime extends StatelessWidget {
 
                 Get.to(() => OrderSummary()); // ✅ Correct instantiation
               },
-
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.black),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                backgroundColor: Colors.black,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
               ),
               child: const Text(
                 'Confirm',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
