@@ -13,18 +13,15 @@ class OrderScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Orders', style: TextStyle(color: Colors.teal)),
-        backgroundColor: const Color(0xFFE0F2F1), // OTP light teal
+        backgroundColor: const Color(0xFFE0F2F1),
         iconTheme: const IconThemeData(color: Colors.teal),
         elevation: 0,
       ),
-      backgroundColor: const Color(0xFFE0F2F1), // OTP light teal background
+      backgroundColor: const Color(0xFFE0F2F1),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFFE0F2F1), // OTP gradient start
-              Color(0xFF80CBC4), // OTP gradient end
-            ],
+            colors: [Color(0xFFE0F2F1), Color(0xFF80CBC4)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -90,7 +87,7 @@ class OrderScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                color: Colors.white, // keep card white for readability
+                color: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -158,7 +155,6 @@ class OrderScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
 
-                      // Status text
                       Text(
                         "Status: ${status[0].toUpperCase() + status.substring(1)}",
                         style: TextStyle(
@@ -176,18 +172,16 @@ class OrderScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: SizedBox(
-                            width: double.infinity, // full width
+                            width: double.infinity,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.teal,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    8,
-                                  ), // rectangular look
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 14,
-                                ), // height
+                                ),
                               ),
                               onPressed: () async {
                                 Get.dialog(
@@ -203,7 +197,7 @@ class OrderScreen extends StatelessWidget {
                                   status: 'delivered',
                                 );
 
-                                Get.back(); // close loading dialog
+                                Get.back();
 
                                 Get.snackbar(
                                   "Success",
