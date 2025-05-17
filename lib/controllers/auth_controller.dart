@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:laundry_management/routes/routes.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -20,7 +20,7 @@ class AuthController extends GetxController {
       phoneNumber: "+91$number",
       verificationCompleted: (PhoneAuthCredential credential) async {
         await _auth.signInWithCredential(credential);
-        Get.offAllNamed('/home');
+        Get.offAllNamed(Routes.home);
       },
       verificationFailed: (FirebaseAuthException e) {
         Get.snackbar("Error", e.message ?? "Verification failed");
@@ -29,7 +29,7 @@ class AuthController extends GetxController {
       codeSent: (String verId, int? resendToken) {
         verificationId.value = verId;
         isLoading.value = false;
-        Get.toNamed('/otp');
+        Get.toNamed(Routes.otp);
       },
       codeAutoRetrievalTimeout: (String verId) {
         verificationId.value = verId;
@@ -46,7 +46,7 @@ class AuthController extends GetxController {
       );
       await _auth.signInWithCredential(credential);
       isLoading.value = false;
-      Get.offAllNamed('/home');
+      Get.offAllNamed(Routes.home);
     } catch (e) {
       isLoading.value = false;
       Get.snackbar("Error", "Invalid OTP");

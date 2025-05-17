@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CustomerController extends GetxController {
   // Use dynamic instead of String for compatibility with Firestore
   RxList<Map<String, dynamic>> customerList = <Map<String, dynamic>>[].obs;
+  RxBool isLoading = false.obs;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   final storage = GetStorage();
@@ -17,6 +18,7 @@ class CustomerController extends GetxController {
 
   void fetchCustomersFromFirestore() async {
     try {
+      isLoading.value = true;
       final snapshot = await firestore.collection('customers').get();
       customerList.clear();
       for (var doc in snapshot.docs) {
@@ -26,6 +28,8 @@ class CustomerController extends GetxController {
       print(snapshot);
     } catch (e) {
       print('❌ Failed to fetch customers: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 

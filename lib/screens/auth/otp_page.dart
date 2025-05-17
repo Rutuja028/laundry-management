@@ -10,10 +10,8 @@ class OTPPage extends StatelessWidget {
     otpController.addListener(() {
       final otp = otpController.text.trim();
       if (otp.length == 6) {
-        // Unfocus keyboard
         FocusManager.instance.primaryFocus?.unfocus();
 
-        // Call verify OTP
         authController.verifyOTP(otp);
       }
     });
@@ -157,7 +155,7 @@ class OTPPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       const Text(
-                        "Didn’t receive the OTP? Please check your number or try again.",
+                        "Didn't receive the OTP? Please check your number or try again.",
                         style: TextStyle(fontSize: 13, color: Colors.black54),
                         textAlign: TextAlign.center,
                       ),

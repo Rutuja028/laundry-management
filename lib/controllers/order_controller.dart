@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrderController extends GetxController {
   RxList<Map<String, dynamic>> orders = <Map<String, dynamic>>[].obs;
+  RxBool isLoading = false.obs;
   final GetStorage storage = GetStorage();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -33,6 +34,7 @@ class OrderController extends GetxController {
 
   Future<void> fetchAllOrders() async {
     try {
+      isLoading.value = true;
       orders.clear();
 
       final customersSnapshot = await firestore.collection('customers').get();
@@ -67,6 +69,8 @@ class OrderController extends GetxController {
       print('✅ All orders fetched successfully');
     } catch (e) {
       print('❌ Failed to fetch orders: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 

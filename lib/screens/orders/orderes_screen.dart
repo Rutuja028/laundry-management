@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laundry_management/controllers/order_controller.dart';
+import 'package:shimmer/shimmer.dart';
 
 class OrderScreen extends StatelessWidget {
   OrderScreen({super.key});
@@ -29,6 +30,28 @@ class OrderScreen extends StatelessWidget {
           ),
         ),
         child: Obx(() {
+          if (orderController.isLoading.value) {
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: 6,
+                itemBuilder:
+                    (context, index) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Container(
+                        height: 180,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+              ),
+            );
+          }
+
           final orders = orderController.orders;
 
           if (orders.isEmpty) {

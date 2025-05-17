@@ -5,6 +5,7 @@ import 'package:laundry_management/screens/customer/add_customer_info.dart';
 import 'package:laundry_management/screens/customer/customer_list.dart';
 import 'package:laundry_management/screens/items/order_summary.dart';
 import 'package:laundry_management/screens/delivered/delivered.dart';
+import 'package:laundry_management/routes/routes.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -87,40 +88,25 @@ class HomePage extends StatelessWidget {
                   CustomButton(
                     title: "Add Customer",
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddCustomerDetail(),
-                        ),
-                      );
+                      Get.toNamed(Routes.addCustomer);
                     },
                   ),
                   CustomButton(
                     title: "Customer List",
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CustomerListScreen(),
-                        ),
-                      );
+                      Get.toNamed(Routes.customerlist);
                     },
                   ),
                   CustomButton(
                     title: "Orders",
                     onPressed: () {
-                      Get.toNamed('/invoices');
+                      Get.toNamed(Routes.orders);
                     },
                   ),
                   CustomButton(
                     title: "Delivered",
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DeliveredOrdersScreen(),
-                        ),
-                      );
+                      Get.toNamed(Routes.delivered);
                     },
                   ),
                 ],

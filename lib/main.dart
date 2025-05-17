@@ -1,64 +1,25 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:laundry_management/controllers/customer_controller.dart';
-import 'package:laundry_management/controllers/delivered_controller.dart';
-import 'package:laundry_management/controllers/items_controller.dart';
-import 'package:laundry_management/controllers/order_controller.dart';
-import 'package:laundry_management/screens/auth/otp_page.dart';
-import 'package:laundry_management/screens/auth/sign_in_page.dart';
-import 'package:laundry_management/screens/home/home_page.dart';
-import 'package:laundry_management/screens/orders/orderes_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:laundry_management/routes/routes.dart';
+import 'routes/app_pages.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  await Firebase.initializeApp(); // Add firebase_options.dart if needed
-  Get.put(CustomerController());
-  Get.put(ItemController());
-  Get.put(OrderController());
-  Get.put(DeliveryController());
+  await Firebase.initializeApp();
 
-  runApp(const MainApp());
-}
+  final user = FirebaseAuth.instance.currentUser;
+  // Removed global CustomerBinding registration for proper lazyPut usage
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
+  runApp(
+    GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthWrapper(),
-      getPages: [
-        GetPage(name: '/otp', page: () => OTPPage()),
-        GetPage(name: '/signin', page: () => SignInPage()),
-        GetPage(name: '/home', page: () => HomePage()),
-        GetPage(name: '/invoices', page: () => OrderScreen()),
-      ],
-    );
-  }
-}
-
-class AuthWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        // User is logged in
-        if (snapshot.connectionState == ConnectionState.active) {
-          if (snapshot.hasData) {
-            return HomePage(); // Send to home page if already logged in
-          } else {
-            return SignInPage(); // Send to sign in page
-          }
-        }
-        // Waiting for auth state
-        return Scaffold(body: Center(child: CircularProgressIndicator()));
-      },
-    );
-  }
+      title: 'Laundry Management',
+      initialRoute: user != null ? Routes.home : Routes.signinpage,
+      getPages: AppPages.route,
+    ),
+  );
 }

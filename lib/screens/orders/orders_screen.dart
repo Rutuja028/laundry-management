@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:laundry_management/controllers/delivered_controller.dart';
+import 'package:laundry_management/controllers/order_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
-class DeliveredOrdersScreen extends StatelessWidget {
-  DeliveredOrdersScreen({super.key});
+class OrderScreen extends StatelessWidget {
+  OrderScreen({super.key});
 
-  final DeliveryController deliveryController = Get.find<DeliveryController>();
+  final OrderController orderController = Get.find<OrderController>();
 
   @override
   Widget build(BuildContext context) {
-    // Fetch delivered orders when the screen builds
-    deliveryController.fetchdeliveredOrders();
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Delivered Orders',
-          style: TextStyle(color: Colors.teal),
-        ),
+        title: const Text('Orders', style: TextStyle(color: Colors.teal)),
         backgroundColor: const Color(0xFFE0F2F1), // OTP light teal
         iconTheme: const IconThemeData(color: Colors.teal),
         elevation: 0,
@@ -36,33 +30,33 @@ class DeliveredOrdersScreen extends StatelessWidget {
           ),
         ),
         child: Obx(() {
-          if (deliveryController.isLoading.value) {
+          if (orderController.isLoading.value) {
             return Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: ListView.builder(
                 padding: const EdgeInsets.all(12),
                 itemCount: 6,
-                itemBuilder:
-                    (context, index) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Container(
-                        height: 180,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Container(
+                    height: 180,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                  ),
+                ),
               ),
             );
           }
-          final orders = deliveryController.orders;
+
+          final orders = orderController.orders;
 
           if (orders.isEmpty) {
             return const Center(
               child: Text(
-                "No delivered orders available.",
+                "No invoices available.",
                 style: TextStyle(color: Colors.teal),
               ),
             );
@@ -78,8 +72,16 @@ class DeliveredOrdersScreen extends StatelessWidget {
               final pickup = order['pickup'];
               final delivery = order['delivery'];
               final timestamp = order['timestamp'];
-              final orderId = order['orderId'];
-              final customerPhone = customer['phone'];
+              final status = order['status'] ?? 'pending';
+              final orderId = order['orderId'] ?? 'Unknown';
+
+              final customerName = customer['name'] ?? 'Unknown';
+              final customerPhone = customer['phone'] ?? 'Unknown';
+              final customerAddress = customer['address'] ?? 'Unknown';
+              final pickupDate = pickup['date'] ?? 'Not specified';
+              final pickupTime = pickup['time'] ?? 'Not specified';
+              final deliveryDate = delivery['date'] ?? 'Not specified';
+              final deliveryTime = delivery['time'] ?? 'Not specified';
 
               return Card(
                 elevation: 4,
@@ -94,11 +96,11 @@ class DeliveredOrdersScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Order #${index + 1}",
+                        "Invoice #${index + 1}",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.teal, // OTP theme accent color
+                          color: Colors.teal,
                         ),
                       ),
                       const SizedBox(height: 6),
@@ -108,15 +110,15 @@ class DeliveredOrdersScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        "Customer: ${customer['name']}",
+                        "Customer: $customerName",
                         style: const TextStyle(color: Colors.black87),
                       ),
                       Text(
-                        "Phone: ${customer['phone']}",
+                        "Phone: $customerPhone",
                         style: const TextStyle(color: Colors.black87),
                       ),
                       Text(
-                        "Address: ${customer['address']}",
+                        "Address: $customerAddress",
                         style: const TextStyle(color: Colors.black87),
                       ),
                       const Divider(height: 20),
@@ -138,11 +140,11 @@ class DeliveredOrdersScreen extends StatelessWidget {
                       ),
                       const Divider(height: 20),
                       Text(
-                        "Pickup: ${pickup['date']} at ${pickup['time']}",
+                        "Pickup: $pickupDate at $pickupTime",
                         style: const TextStyle(color: Colors.black87),
                       ),
                       Text(
-                        "Delivery: ${delivery['date']} at ${delivery['time']}",
+                        "Delivery: $deliveryDate at $deliveryTime",
                         style: const TextStyle(color: Colors.black87),
                       ),
                       const Divider(height: 20),
@@ -154,14 +156,70 @@ class DeliveredOrdersScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      // Status text (always delivered here)
-                      const Text(
-                        "Status: Delivered",
+
+                      // Status text
+                      Text(
+                        "Status: ${status[0].toUpperCase() + status.substring(1)}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                          color:
+                              status == 'delivered'
+                                  ? Colors.green
+                                  : Colors.orange,
                         ),
                       ),
+
+                      const SizedBox(height: 10),
+
+                      if (status != 'delivered')
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: SizedBox(
+                            width: double.infinity, // full width
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.teal,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    8,
+                                  ), // rectangular look
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ), // height
+                              ),
+                              onPressed: () async {
+                                Get.dialog(
+                                  const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  barrierDismissible: false,
+                                );
+
+                                await orderController.updateOrderStatus(
+                                  customerPhone: customerPhone,
+                                  orderId: orderId,
+                                  status: 'delivered',
+                                );
+
+                                Get.back(); // close loading dialog
+
+                                Get.snackbar(
+                                  "Success",
+                                  "Order marked as delivered",
+                                  snackPosition: SnackPosition.BOTTOM,
+                                );
+                              },
+                              child: const Text(
+                                'Mark as Delivered',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
