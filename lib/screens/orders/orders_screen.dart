@@ -21,10 +21,7 @@ class OrderScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFFE0F2F1),
-              Color(0xFF80CBC4),
-            ],
+            colors: [Color(0xFFE0F2F1), Color(0xFF80CBC4)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -37,16 +34,17 @@ class OrderScreen extends StatelessWidget {
               child: ListView.builder(
                 padding: const EdgeInsets.all(12),
                 itemCount: 6,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                    height: 180,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
+                itemBuilder:
+                    (context, index) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Container(
+                        height: 180,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
               ),
             );
           }
@@ -176,9 +174,7 @@ class OrderScreen extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.teal,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    8,
-                                  ),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 14,

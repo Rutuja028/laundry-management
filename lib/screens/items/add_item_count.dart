@@ -18,10 +18,7 @@ class AddItemCount extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF80CBC4),
-                Color(0xFF00695C),
-              ],
+              colors: [Color(0xFF80CBC4), Color(0xFF00695C)],
             ),
           ),
         ),
@@ -84,8 +81,9 @@ class AddItemCount extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ScheduleDateTime(selectedItems: selectedItems),
+                        builder:
+                            (context) =>
+                                ScheduleDateTime(selectedItems: selectedItems),
                       ),
                     );
                   },

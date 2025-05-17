@@ -27,10 +27,7 @@ class DeliveryController extends GetxController {
                 .collection('customers')
                 .doc(phone)
                 .collection('orders')
-                .where(
-                  'status',
-                  isEqualTo: 'delivered',
-                )
+                .where('status', isEqualTo: 'delivered')
                 .get();
 
         for (var orderDoc in ordersSnapshot.docs) {
