@@ -26,12 +26,7 @@ class AppPages {
       binding: AuthBinding(),
       transition: transition,
     ),
-    GetPage(
-      name: Routes.home,
-      page: () => HomePage(),
-      // Add binding if needed
-      transition: transition,
-    ),
+    GetPage(name: Routes.home, page: () => HomePage(), transition: transition),
     GetPage(
       name: Routes.orders,
       page: () => OrderScreen(),

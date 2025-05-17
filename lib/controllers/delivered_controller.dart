@@ -30,7 +30,7 @@ class DeliveryController extends GetxController {
                 .where(
                   'status',
                   isEqualTo: 'delivered',
-                ) // filter in Firestore query
+                )
                 .get();
 
         for (var orderDoc in ordersSnapshot.docs) {

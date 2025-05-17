@@ -3,7 +3,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CustomerController extends GetxController {
-  // Use dynamic instead of String for compatibility with Firestore
   RxList<Map<String, dynamic>> customerList = <Map<String, dynamic>>[].obs;
   RxBool isLoading = false.obs;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -22,7 +21,7 @@ class CustomerController extends GetxController {
       final snapshot = await firestore.collection('customers').get();
       customerList.clear();
       for (var doc in snapshot.docs) {
-        customerList.add(doc.data()); // doc.data() is Map<String, dynamic>
+        customerList.add(doc.data());
       }
       print('✅ Customers fetched successfully');
       print(snapshot);

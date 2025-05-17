@@ -15,9 +15,9 @@ class CustomerListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Customer List',
-          style: TextStyle(color: Colors.teal), // OTP theme text color
+          style: TextStyle(color: Colors.teal),
         ),
-        backgroundColor: const Color(0xFFE0F2F1), // OTP theme light teal
+        backgroundColor: const Color(0xFFE0F2F1),
         iconTheme: const IconThemeData(color: Colors.teal),
         elevation: 0,
       ),
@@ -26,8 +26,8 @@ class CustomerListScreen extends StatelessWidget {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFFE0F2F1), // OTP gradient start
-              Color(0xFF80CBC4), // OTP gradient end
+              Color(0xFFE0F2F1),
+              Color(0xFF80CBC4),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -40,45 +40,44 @@ class CustomerListScreen extends StatelessWidget {
               highlightColor: Colors.grey[100]!,
               child: ListView.builder(
                 itemCount: 6,
-                itemBuilder:
-                    (context, index) => Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        color: Colors.white,
-                        elevation: 4,
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 16,
-                          ),
-                          title: Container(
-                            width: 100,
-                            height: 18,
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    color: Colors.white,
+                    elevation: 4,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
+                      title: Container(
+                        width: 100,
+                        height: 18,
+                        color: Colors.grey[300],
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 4),
+                          Container(
+                            width: 80,
+                            height: 14,
                             color: Colors.grey[300],
                           ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 4),
-                              Container(
-                                width: 80,
-                                height: 14,
-                                color: Colors.grey[300],
-                              ),
-                              const SizedBox(height: 4),
-                              Container(
-                                width: 120,
-                                height: 14,
-                                color: Colors.grey[300],
-                              ),
-                            ],
+                          const SizedBox(height: 4),
+                          Container(
+                            width: 120,
+                            height: 14,
+                            color: Colors.grey[300],
                           ),
-                        ),
+                        ],
                       ),
                     ),
+                  ),
+                ),
               ),
             );
           }
@@ -111,7 +110,7 @@ class CustomerListScreen extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.teal, // OTP theme accent
+                      color: Colors.teal,
                     ),
                   ),
                   subtitle: Column(

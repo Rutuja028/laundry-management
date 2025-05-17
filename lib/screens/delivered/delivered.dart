@@ -10,7 +10,6 @@ class DeliveredOrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Fetch delivered orders when the screen builds
     deliveryController.fetchdeliveredOrders();
 
     return Scaffold(
@@ -19,17 +18,17 @@ class DeliveredOrdersScreen extends StatelessWidget {
           'Delivered Orders',
           style: TextStyle(color: Colors.teal),
         ),
-        backgroundColor: const Color(0xFFE0F2F1), // OTP light teal
+        backgroundColor: const Color(0xFFE0F2F1),
         iconTheme: const IconThemeData(color: Colors.teal),
         elevation: 0,
       ),
-      backgroundColor: const Color(0xFFE0F2F1), // OTP light teal background
+      backgroundColor: const Color(0xFFE0F2F1),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFFE0F2F1), // OTP gradient start
-              Color(0xFF80CBC4), // OTP gradient end
+              Color(0xFFE0F2F1),
+              Color(0xFF80CBC4),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -43,17 +42,16 @@ class DeliveredOrdersScreen extends StatelessWidget {
               child: ListView.builder(
                 padding: const EdgeInsets.all(12),
                 itemCount: 6,
-                itemBuilder:
-                    (context, index) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Container(
-                        height: 180,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Container(
+                    height: 180,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                  ),
+                ),
               ),
             );
           }
@@ -87,7 +85,7 @@ class DeliveredOrdersScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                color: Colors.white, // keep card white for readability
+                color: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -98,7 +96,7 @@ class DeliveredOrdersScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.teal, // OTP theme accent color
+                          color: Colors.teal,
                         ),
                       ),
                       const SizedBox(height: 6),
@@ -154,7 +152,6 @@ class DeliveredOrdersScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      // Status text (always delivered here)
                       const Text(
                         "Status: Delivered",
                         style: TextStyle(

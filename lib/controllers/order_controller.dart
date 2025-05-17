@@ -25,7 +25,7 @@ class OrderController extends GetxController {
           .doc(phone)
           .collection('orders')
           .add(order);
-      orders.add(order); // <-- keep local list updated
+      orders.add(order);
       print('✅ Order saved to Firestore');
     } catch (e) {
       print('❌ Failed to add order: $e');
@@ -51,7 +51,7 @@ class OrderController extends GetxController {
 
         for (var orderDoc in ordersSnapshot.docs) {
           final orderData = orderDoc.data();
-          orderData['orderId'] = orderDoc.id; // <--- ADD THIS
+          orderData['orderId'] = orderDoc.id;
           orderData['customer'] = customerDoc.data();
           orders.add(orderData);
         }
@@ -87,7 +87,6 @@ class OrderController extends GetxController {
           .doc(orderId)
           .update({'status': status});
 
-      // Also update locally in the orders list if present
       final index = orders.indexWhere(
         (order) =>
             order['orderId'] == orderId &&
@@ -131,7 +130,7 @@ class OrderController extends GetxController {
                 .where(
                   'status',
                   isEqualTo: 'delivered',
-                ) // filter in Firestore query
+                )
                 .get();
 
         for (var orderDoc in ordersSnapshot.docs) {

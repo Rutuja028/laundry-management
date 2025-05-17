@@ -19,8 +19,8 @@ class AddItemCount extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color(0xFF80CBC4), // light teal
-                Color(0xFF00695C), // dark teal
+                Color(0xFF80CBC4),
+                Color(0xFF00695C),
               ],
             ),
           ),
@@ -44,7 +44,6 @@ class AddItemCount extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
-
             Expanded(
               child: Obx(() {
                 return ListView.builder(
@@ -55,7 +54,7 @@ class AddItemCount extends StatelessWidget {
                       image: item['image'],
                       name: item['name'],
                       price: item['price'],
-                      quantity: controller.quantities[index], // RxInt
+                      quantity: controller.quantities[index],
                       onIncrement: () => controller.incrementQuantity(index),
                       onDecrement: () => controller.decrementQuantity(index),
                     );
@@ -63,8 +62,6 @@ class AddItemCount extends StatelessWidget {
                 );
               }),
             ),
-
-            // Confirm Button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: SizedBox(
@@ -87,14 +84,13 @@ class AddItemCount extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder:
-                            (context) =>
-                                ScheduleDateTime(selectedItems: selectedItems),
+                        builder: (context) =>
+                            ScheduleDateTime(selectedItems: selectedItems),
                       ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF00695C), // dark teal
+                    backgroundColor: const Color(0xFF00695C),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -115,7 +111,6 @@ class AddItemCount extends StatelessWidget {
     );
   }
 
-  // Filter Button Widget
   static Widget FilterButton({required String title, bool isSelected = false}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -133,7 +128,6 @@ class AddItemCount extends StatelessWidget {
     );
   }
 
-  // Item Card Widget
   static Widget ItemCard({
     required String image,
     required String name,

@@ -12,7 +12,6 @@ void main() async {
   await Firebase.initializeApp();
 
   final user = FirebaseAuth.instance.currentUser;
-  // Removed global CustomerBinding registration for proper lazyPut usage
 
   runApp(
     GetMaterialApp(

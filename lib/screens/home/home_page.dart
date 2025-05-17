@@ -30,7 +30,6 @@ class HomePage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top Section with Gradient and Profile
           Container(
             width: double.infinity,
             height: 450,
@@ -73,8 +72,6 @@ class HomePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 50),
-
-          // Buttons Grid Section
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

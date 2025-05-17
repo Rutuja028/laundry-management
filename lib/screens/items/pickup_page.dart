@@ -26,7 +26,6 @@ class _PickUpTimePageState extends State<PickUpTimePage> {
       body: Container(
         padding: EdgeInsets.only(left: 10, right: 10),
         child: ListView(
-          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Pick up Date", style: headingStyle),
             SizedBox(height: 10),
