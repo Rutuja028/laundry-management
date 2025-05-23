@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laundry_management/controllers/customer_controller.dart';
-import 'package:laundry_management/screens/items/select_services.dart';
+import 'package:laundry_management/routes/routes.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CustomerListScreen extends StatelessWidget {
@@ -116,17 +116,19 @@ class CustomerListScreen extends StatelessWidget {
                     children: [
                       const SizedBox(height: 4),
                       Text(
+                        // ignore: prefer_interpolation_to_compose_strings
                         "Phone: " + (customer['phone'] ?? 'N/A'),
                         style: const TextStyle(color: Colors.black87),
                       ),
                       Text(
+                        // ignore: prefer_interpolation_to_compose_strings
                         "Address: " + (customer['address'] ?? 'N/A'),
                         style: const TextStyle(color: Colors.black87),
                       ),
                     ],
                   ),
                   onTap: () {
-                    Get.to(const SelectServices());
+                    Get.toNamed(Routes.selectServices);
                   },
                 ),
               );

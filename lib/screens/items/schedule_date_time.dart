@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laundry_management/controllers/items_controller.dart';
-import 'package:laundry_management/screens/items/add_item_count.dart';
-import 'package:laundry_management/screens/items/order_summary.dart';
+import 'package:laundry_management/routes/routes.dart';
 
 class ScheduleDateTime extends StatelessWidget {
-  final List<Map<String, dynamic>> selectedItems;
-  ScheduleDateTime({super.key, required this.selectedItems});
+  ScheduleDateTime({super.key});
 
   final ItemController controller = Get.find<ItemController>();
 
@@ -19,8 +17,17 @@ class ScheduleDateTime extends StatelessWidget {
     '7 PM - 9 PM',
   ];
 
-  String _getMonth(int month) =>
-      const [
+  List<DateTime> _generateNext7Days() {
+    return List.generate(
+      7,
+      (index) => DateTime.now().add(Duration(days: index)),
+    );
+  }
+
+  String _formatDay(DateTime date) =>
+      ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.weekday % 7];
+  String _formatMonth(DateTime date) =>
+      [
         'Jan',
         'Feb',
         'Mar',
@@ -33,56 +40,56 @@ class ScheduleDateTime extends StatelessWidget {
         'Oct',
         'Nov',
         'Dec',
-      ][month - 1];
+      ][date.month - 1];
+  String _formatFullDate(DateTime date) =>
+      "${_formatDay(date)}, ${date.day} ${_formatMonth(date)} ${date.year}";
 
-  String _getWeekday(int weekday) =>
-      const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][weekday - 1];
-
-  String getFormattedDate(DateTime date) =>
-      "${_getWeekday(date.weekday)}, ${date.day} ${_getMonth(date.month)} ${date.year}";
-
-  Future<void> _selectDate(BuildContext context, bool isPickup) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2030),
-    );
-    if (picked != null) {
-      String formattedDate = getFormattedDate(picked);
-      if (isPickup) {
-        controller.setPickupDate(formattedDate);
-      } else {
-        controller.setDeliveryDate(formattedDate);
-      }
-    }
-  }
-
-  Widget buildTimeSlot({
-    required String time,
-    required RxString selectedTime,
-    required VoidCallback onTap,
+  Widget _buildDateCard({
+    required DateTime date,
+    required RxString selectedDate,
+    required void Function(String) onSelect,
   }) {
-    return Obx(
-      () => GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
-          margin: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: selectedTime.value == time ? Colors.teal : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: selectedTime.value == time ? Colors.teal : Colors.grey,
-            ),
+    String formattedDate = _formatFullDate(date);
+    bool isSelected = selectedDate.value == formattedDate;
+
+    return GestureDetector(
+      onTap: () => onSelect(formattedDate),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+        margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.teal : Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isSelected ? Colors.teal : Colors.grey.shade300,
+            width: 1.5,
           ),
-          child: Text(
-            time,
-            style: TextStyle(
-              color: selectedTime.value == time ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: Offset(0, 2),
             ),
-          ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Text(
+              _formatDay(date),
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.black87,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '${date.day} ${_formatMonth(date)}',
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.black87,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -90,12 +97,15 @@ class ScheduleDateTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final selectedItems = Get.arguments;
+    final upcomingDates = _generateNext7Days();
+
     return Scaffold(
-      backgroundColor: const Color(0xFFE0F2F1),
+      backgroundColor: const Color(0xFFF1FDFB),
       appBar: AppBar(
-        title: const Text('Add Items'),
-        backgroundColor: const Color(0xFF80CBC4),
-        elevation: 0,
+        title: const Text('Schedule Service'),
+        backgroundColor: const Color(0xFF00796B),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 90),
@@ -104,40 +114,40 @@ class ScheduleDateTime extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Schedule Pickup",
+                "📦 Pickup Details",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.teal,
                 ),
               ),
-              const SizedBox(height: 10),
-              const Text("Date", style: TextStyle(color: Colors.black87)),
+              const SizedBox(height: 12),
+              const Text(
+                "Pickup Date",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               Obx(
-                () => GestureDetector(
-                  onTap: () => _selectDate(context, true),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.teal.shade200),
-                    ),
-                    child: Center(
-                      child: Text(
-                        controller.pickupDate.value,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.teal.shade700,
-                        ),
-                      ),
-                    ),
+                () => SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children:
+                        upcomingDates
+                            .map(
+                              (date) => _buildDateCard(
+                                date: date,
+                                selectedDate: controller.pickupDate,
+                                onSelect: controller.setPickupDate,
+                              ),
+                            )
+                            .toList(),
                   ),
                 ),
               ),
-              const Text("Time", style: TextStyle(color: Colors.black87)),
+              const SizedBox(height: 8),
+              const Text(
+                "Pickup Time",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               Wrap(
                 children:
                     timeSlots
@@ -150,43 +160,42 @@ class ScheduleDateTime extends StatelessWidget {
                         )
                         .toList(),
               ),
-
-              const SizedBox(height: 20),
+              const SizedBox(height: 28),
               const Text(
-                "Schedule Delivery",
+                "🚚 Delivery Details",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.teal,
                 ),
               ),
-              const SizedBox(height: 10),
-              const Text("Date", style: TextStyle(color: Colors.black87)),
+              const SizedBox(height: 12),
+              const Text(
+                "Delivery Date",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               Obx(
-                () => GestureDetector(
-                  onTap: () => _selectDate(context, false),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.teal.shade200),
-                    ),
-                    child: Center(
-                      child: Text(
-                        controller.deliveryDate.value,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.teal.shade700,
-                        ),
-                      ),
-                    ),
+                () => SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children:
+                        upcomingDates
+                            .map(
+                              (date) => _buildDateCard(
+                                date: date,
+                                selectedDate: controller.deliveryDate,
+                                onSelect: controller.setDeliveryDate,
+                              ),
+                            )
+                            .toList(),
                   ),
                 ),
               ),
-              const Text("Time", style: TextStyle(color: Colors.black87)),
+              const SizedBox(height: 8),
+              const Text(
+                "Delivery Time",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               Wrap(
                 children:
                     timeSlots
@@ -203,67 +212,106 @@ class ScheduleDateTime extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: Row(
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+      bottomSheet: Container(
+        padding: const EdgeInsets.all(16),
+        color: Colors.white,
+        child: Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  side: const BorderSide(color: Colors.teal),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
-                side: const BorderSide(color: Colors.teal),
-              ),
-              child: const Text(
-                'Back',
-                style: TextStyle(
-                  color: Colors.teal,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                child: const Text(
+                  'Back',
+                  style: TextStyle(
+                    color: Colors.teal,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () {
-                if (selectedItems.isEmpty ||
-                    controller.pickupDate.value.isEmpty ||
-                    controller.deliveryDate.value.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please complete all details'),
-                    ),
-                  );
-                  return;
-                }
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  if (controller.pickupDate.value.isEmpty ||
+                      controller.deliveryDate.value.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please complete all details'),
+                      ),
+                    );
+                    return;
+                  }
+                  Get.toNamed(Routes.ordersummary, arguments: selectedItems);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: const Text(
+                  'Confirm',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-                Get.to(() => OrderSummary());
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
+  Widget buildTimeSlot({
+    required String time,
+    required RxString selectedTime,
+    required VoidCallback onTap,
+  }) {
+    return Obx(
+      () => GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+          margin: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: selectedTime.value == time ? Colors.teal : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color:
+                  selectedTime.value == time
+                      ? Colors.teal
+                      : Colors.grey.shade300,
+              width: 1.5,
+            ),
+            boxShadow: [
+              const BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
-              child: const Text(
-                'Confirm',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
+            ],
+          ),
+          child: Text(
+            time,
+            style: TextStyle(
+              color: selectedTime.value == time ? Colors.white : Colors.black87,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ],
+        ),
       ),
     );
   }

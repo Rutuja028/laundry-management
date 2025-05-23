@@ -1,65 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laundry_management/controllers/items_controller.dart';
-import 'package:laundry_management/screens/items/add_item_count.dart';
+import 'package:laundry_management/routes/routes.dart';
 
 class SelectServices extends StatelessWidget {
   const SelectServices({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ItemController itemController = Get.find<ItemController>();
+    final ItemController controller = Get.find();
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        elevation: 0,
         backgroundColor: Colors.transparent,
+        elevation: 0,
         automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFE0F2F1), Color(0xFF80CBC4)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.teal),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Add Item',
-          style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
+          'Select Services',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFE0F2F1), Color(0xFF80CBC4)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
+            colors: [Color(0xFFB2DFDB), Color(0xFF004D40)],
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Text(
+                  'Select Your Service',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
                 const SizedBox(height: 20),
-                _buildSectionTitle('Select Services'),
-                const SizedBox(height: 10),
-                Obx(() => _buildServiceGrid(itemController)),
+                Expanded(
+                  child: Obx(
+                    () => GridView.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      children: _serviceOptions(controller),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 20),
-                _buildSectionTitle('Select Detergent'),
+                const Text(
+                  'Choose Detergent',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
                 const SizedBox(height: 10),
-                Obx(() => _buildDetergentOptions(itemController)),
+                Obx(
+                  () => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: _detergentOptions(controller),
+                  ),
+                ),
                 const SizedBox(height: 20),
                 Obx(
                   () => Text(
-                    'Do you want to proceed with ${itemController.selectedService.value} and ${itemController.selectedDetergent.value} detergent?',
-                    style: const TextStyle(fontSize: 16, color: Colors.black87),
+                    'Proceed with ${controller.selectedService.value} & ${controller.selectedDetergent.value} detergent?',
+                    style: const TextStyle(color: Colors.white70, fontSize: 16),
                   ),
                 ),
               ],
@@ -67,98 +86,96 @@ class SelectServices extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: _buildProceedButton(context, itemController),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: ElevatedButton(
+            onPressed: () {
+              if (controller.selectedService.value.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please select a service')),
+                );
+                return;
+              }
+              Get.toNamed(Routes.additem);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.tealAccent.shade700,
+              foregroundColor: Colors.white,
+              elevation: 6,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              minimumSize: const Size.fromHeight(50),
+            ),
+            child: const Text(
+              'Proceed',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  Widget _buildSearchBar() => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
+  List<Widget> _serviceOptions(ItemController controller) => [
+    _serviceCard('Wash', '₹20', 'assets/services/wash.jpg', controller),
+    _serviceCard(
+      'Wash & Fold',
+      '₹40',
+      'assets/services/washAndFold.jpg',
+      controller,
     ),
-    child: const TextField(
-      decoration: InputDecoration(
-        hintText: 'Search...',
-        prefixIcon: Icon(Icons.search, color: Colors.teal),
-        border: InputBorder.none,
-      ),
+    _serviceCard('Iron', '₹20', 'assets/services/iron.jpg', controller),
+    _serviceCard(
+      'Dry Clean',
+      '₹30',
+      'assets/services/dryClean.jpg',
+      controller,
     ),
-  );
+  ];
 
-  Widget _buildSectionTitle(String title) => Text(
-    title,
-    style: const TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 18,
-      color: Colors.teal,
-    ),
-  );
-
-  Widget _buildServiceGrid(ItemController controller) => GridView.count(
-    shrinkWrap: true,
-    crossAxisCount: 2,
-    crossAxisSpacing: 16,
-    mainAxisSpacing: 16,
-    childAspectRatio: 0.9,
-    physics: const NeverScrollableScrollPhysics(),
-    children: [
-      _buildServiceCard('Wash', '₹20', 'assets/services/wash.jpg', controller),
-      _buildServiceCard(
-        'Wash & Fold',
-        '₹40',
-        'assets/services/washAndFold.jpg',
-        controller,
-      ),
-      _buildServiceCard('Iron', '₹20', 'assets/services/iron.jpg', controller),
-      _buildServiceCard(
-        'Dry Clean',
-        '₹30',
-        'assets/services/dryClean.jpg',
-        controller,
-      ),
-    ],
-  );
-
-  Widget _buildServiceCard(
+  Widget _serviceCard(
     String title,
     String price,
-    String imagePath,
+    String image,
     ItemController controller,
   ) {
-    final bool isSelected = controller.selectedService.value == title;
+    final bool selected = controller.selectedService.value == title;
 
     return GestureDetector(
       onTap: () => controller.setService(title),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.teal : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: const [
-            BoxShadow(color: Colors.black12, blurRadius: 4, spreadRadius: 1),
+          color: selected ? Colors.tealAccent.shade700 : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            if (selected)
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(0, 4),
+                blurRadius: 10,
+              ),
           ],
-          border: Border.all(
-            color: isSelected ? Colors.teal : Colors.black12,
-            width: isSelected ? 2 : 1,
-          ),
         ),
+        padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(imagePath, height: 60),
+            Image.asset(image, height: 60),
             const SizedBox(height: 10),
             Text(
               title,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : Colors.teal.shade900,
+                color: selected ? Colors.white : Colors.teal.shade900,
               ),
             ),
-            const SizedBox(height: 5),
             Text(
               price,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.teal.shade700,
+                color: selected ? Colors.white70 : Colors.teal.shade700,
               ),
             ),
           ],
@@ -167,83 +184,30 @@ class SelectServices extends StatelessWidget {
     );
   }
 
-  Widget _buildDetergentOptions(ItemController controller) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      _buildDetergentOption('Regular', controller),
-      _buildDetergentOption('Perfume Free', controller),
-      _buildDetergentOption('Eco-friendly', controller),
-    ],
-  );
+  List<Widget> _detergentOptions(ItemController controller) => [
+    _detergentCard('Regular', controller),
+    _detergentCard('Perfume Free', controller),
+    _detergentCard('Eco-friendly', controller),
+  ];
 
-  Widget _buildDetergentOption(String title, ItemController controller) {
-    final bool isSelected = controller.selectedDetergent.value == title;
+  Widget _detergentCard(String title, ItemController controller) {
+    final bool selected = controller.selectedDetergent.value == title;
 
     return GestureDetector(
       onTap: () => controller.setDetergent(title),
-      child: Container(
-        padding: const EdgeInsets.all(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.teal : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.teal.shade200),
-          boxShadow:
-              isSelected
-                  ? [
-                    BoxShadow(
-                      color: Colors.teal.withOpacity(0.4),
-                      blurRadius: 8,
-                      spreadRadius: 1,
-                      offset: const Offset(0, 3),
-                    ),
-                  ]
-                  : [],
+          color: selected ? Colors.white : Colors.teal.shade800,
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.white54),
         ),
         child: Text(
           title,
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: isSelected ? Colors.white : Colors.teal.shade900,
-            fontSize: 14,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProceedButton(BuildContext context, ItemController controller) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            onPressed: () {
-              if (controller.selectedService.value.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please select a service!')),
-                );
-                return;
-              }
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AddItemCount()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              elevation: 4,
-            ),
-            child: const Text(
-              'Proceed',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
+            color: selected ? Colors.teal.shade900 : Colors.white,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
